@@ -1,4 +1,12 @@
-from pulp import LpInteger, LpMinimize, LpProblem, LpStatus, LpVariable, lpSum
+from pulp import (
+    PULP_CBC_CMD,
+    LpInteger,
+    LpMinimize,
+    LpProblem,
+    LpStatus,
+    LpVariable,
+    lpSum,
+)
 
 # from collections import deque
 
@@ -64,7 +72,7 @@ def pulp_solver(target: list[int], buttons: list[list[int]]) -> int:
         contrib = lpSum(x[i] for i, btn in enumerate(buttons) if pos in btn)
         prob += contrib == target[pos]
 
-    prob.solve()
+    prob.solve(PULP_CBC_CMD(msg=False))
 
     if LpStatus[prob.status] == "Optimal":
         return int(sum(v.varValue for v in x))
